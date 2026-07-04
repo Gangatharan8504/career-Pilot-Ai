@@ -43,20 +43,18 @@ The system is built to:
               +-----------------------------------+
               |         Node.js Backend           |
               |         (Express Server)          |
-              +--------+--------+--------+--------+
-                       |        |        |
-         Local/Network |        |        | Google REST API
-                       v        |        v
-        +--------------+-----+  |  +-----+---------------+
-        |    MongoDB Local   |  |  |    Gemini API       |
-        | (Auth, StudyPlans, |  |  | (gemini-2.5-flash   |
-        |  Progress, Chats)  |  |  |  text-embedding-004)|
-        +--------------------+  |  +---------------------+
-                                v
-                     +----------+----------+
-                     | Vector Similarity   |
-                     |  ChromaDB / Mongo   |
-                     +---------------------+
+              +--------+-----------------+--------+
+                       |                 |
+         Local/Network |                 | Google REST API
+                       v                 v
+        +--------------+-----+     +-----+---------------+
+        |    MongoDB Local   |     |    Gemini API       |
+        | (Auth, StudyPlans, |     | (gemini-2.5-flash   |
+        |  Progress, Chats)  |     |  text-embedding-004)|
+        +--------------------+     +---------------------+
+                       |
+                       +-----> [Vector Similarity Engine]
+                               (In-Memory Cosine Matcher)
 ```
 
 ---
@@ -65,7 +63,7 @@ The system is built to:
 * **Frontend**: React (Vite), HTML5, Vanilla CSS (Premium Obsidian Dark Theme, Glassmorphism, Responsive Grid), Lucide React (vector icons).
 * **Backend**: Node.js, Express, Mongoose, Multer (multipart handler), Nodemailer (email service).
 * **Database**: MongoDB (Local v8.0.12 or MongoDB Atlas).
-* **Vector Database**: ChromaDB (Python integration) or local in-memory cosine similarity engine backup.
+* **Vector Database**: Self-contained in-memory cosine similarity engine loaded directly in Node.js.
 * **LLM Integration**: Google Gemini API (`models/gemini-2.5-flash` for generation & `models/text-embedding-004` for vector embeddings).
 
 ---
@@ -160,7 +158,7 @@ Add your API credentials inside `backend/.env`:
 ```env
 PORT=8080
 MONGO_URI=mongodb://localhost:27017/careerpilot
-GEMINI_API_KEY=AIzaSyB8MKCMHC_ijbrr3qkwU-NK7ZMBL4zfO5E
+GEMINI_API_KEY=your_gemini_api_key_here
 GEMINI_MODEL=models/gemini-2.5-flash
 
 # SMTP Configuration (Optional)
@@ -173,14 +171,7 @@ SMTP_PASS=
 SMTP_FROM=no-reply@careerpilot.ai
 ```
 
-#### Step 3: Run ChromaDB (Optional)
-Run the automated start-up script to launch ChromaDB locally on port 8000:
-* **Windows**: Double-click `vectordb/ChromaDB/run_chromadb.bat` or run:
-  ```bash
-  python vectordb/ChromaDB/run_chromadb.py
-  ```
-
-#### Step 4: Run Node.js Backend
+#### Step 3: Run Node.js Backend
 Navigate to `backend` and start the server:
 ```bash
 cd backend
@@ -189,7 +180,7 @@ npm start
 ```
 The backend server runs on `http://localhost:8080`.
 
-#### Step 5: Run React Frontend
+#### Step 4: Run React Frontend
 Navigate to `frontend` and start the Vite dev server:
 ```bash
 cd frontend
@@ -197,17 +188,6 @@ npm install
 npm run dev
 ```
 Open `http://localhost:5173` in your browser.
-
----
-
-### Run with Docker Compose
-If Docker is installed:
-1. Navigate to the `docker` directory.
-2. Run:
-   ```bash
-   docker compose up --build
-   ```
-3. Docker Compose will build the multi-stage images and run MongoDB, ChromaDB, Node.js backend, and React Nginx server.
 
 ---
 
