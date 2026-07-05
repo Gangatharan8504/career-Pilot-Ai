@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { API_BASE_URL } from '../config';
 import { Send, Bot, User, Trash2 } from 'lucide-react';
 
 export default function AIChat({ userId }) {
@@ -12,7 +13,7 @@ export default function AIChat({ userId }) {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/history?sessionType=CHAT`, {
+        const response = await fetch(`${API_BASE_URL}/history?sessionType=CHAT`, {
           headers: { 'X-User-Id': userId }
         });
         if (response.ok) {
@@ -47,7 +48,7 @@ export default function AIChat({ userId }) {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8080/chat', {
+      const response = await fetch(`${API_BASE_URL}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_BASE_URL } from '../config';
 import { BookOpen, Brain, MessageSquareText, Award, CheckCircle2, XCircle, ChevronRight, HelpCircle } from 'lucide-react';
 
 export default function AptitudeRound({ userId }) {
@@ -20,7 +21,7 @@ export default function AptitudeRound({ userId }) {
     setSubmitted(false);
 
     try {
-      const response = await fetch('http://localhost:8080/aptitude/generate', {
+      const response = await fetch(`${API_BASE_URL}/aptitude/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -70,7 +71,7 @@ export default function AptitudeRound({ userId }) {
 
     // Save score to backend Progress profile
     try {
-      const response = await fetch('http://localhost:8080/aptitude/submit', {
+      const response = await fetch(`${API_BASE_URL}/aptitude/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

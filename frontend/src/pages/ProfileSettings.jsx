@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { API_BASE_URL } from '../config';
 import { User, Mail, Camera, Save, AlertCircle } from 'lucide-react';
 
 export default function ProfileSettings({ userId, userName, userEmail, userProfilePic, onProfileUpdate }) {
@@ -32,7 +33,7 @@ export default function ProfileSettings({ userId, userName, userEmail, userProfi
     setSuccess('');
 
     try {
-      const response = await fetch('http://localhost:8080/profile/update', {
+      const response = await fetch(`${API_BASE_URL}/profile/update`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -79,7 +80,7 @@ export default function ProfileSettings({ userId, userName, userEmail, userProfi
     formData.append('file', file);
 
     try {
-      const response = await fetch('http://localhost:8080/profile/upload-pic', {
+      const response = await fetch(`${API_BASE_URL}/profile/upload-pic`, {
         method: 'POST',
         headers: {
           'X-User-Id': userId
@@ -106,7 +107,7 @@ export default function ProfileSettings({ userId, userName, userEmail, userProfi
     fileInputRef.current.click();
   };
 
-  const picUrl = profilePic ? `http://localhost:8080${profilePic}` : null;
+  const picUrl = profilePic ? `${API_BASE_URL}${profilePic}` : null;
 
   return (
     <div className="fade-in-slide">

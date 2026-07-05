@@ -174,7 +174,8 @@ export async function login(req, res) {
       userId: user._id.toString(),
       name: user.name,
       email: user.email,
-      role: user.role
+      role: user.role,
+      profilePic: user.profilePic || ''
     });
   } catch (err) {
     console.error('Login error:', err);

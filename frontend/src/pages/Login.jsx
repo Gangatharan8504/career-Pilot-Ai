@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_BASE_URL } from '../config';
 import { Mail, Lock, LogIn, ArrowRight, ShieldCheck, Key } from 'lucide-react';
 
 const RevealText = ({ text }) => {
@@ -44,7 +45,7 @@ export default function Login({ onLoginSuccess, switchToRegister }) {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:8080/login', {
+      const response = await fetch(`${API_BASE_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -75,7 +76,7 @@ export default function Login({ onLoginSuccess, switchToRegister }) {
     setSuccess('');
 
     try {
-      const response = await fetch('http://localhost:8080/forgot-password', {
+      const response = await fetch(`${API_BASE_URL}/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: resetEmail }),
@@ -112,7 +113,7 @@ export default function Login({ onLoginSuccess, switchToRegister }) {
     setSuccess('');
 
     try {
-      const response = await fetch('http://localhost:8080/reset-password', {
+      const response = await fetch(`${API_BASE_URL}/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: resetEmail, otp: resetOtp, newPassword }),

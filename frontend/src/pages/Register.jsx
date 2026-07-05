@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_BASE_URL } from '../config';
 import { User, Mail, Lock, UserPlus, ArrowRight, ShieldCheck } from 'lucide-react';
 
 const RevealText = ({ text }) => {
@@ -40,7 +41,7 @@ export default function Register({ switchToLogin }) {
     setSuccess('');
 
     try {
-      const response = await fetch('http://localhost:8080/register', {
+      const response = await fetch(`${API_BASE_URL}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
@@ -72,7 +73,7 @@ export default function Register({ switchToLogin }) {
     setSuccess('');
 
     try {
-      const response = await fetch('http://localhost:8080/verify-otp', {
+      const response = await fetch(`${API_BASE_URL}/verify-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp }),

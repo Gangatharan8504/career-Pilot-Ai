@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 import { Calendar, CheckCircle2, RefreshCw, Code, BookOpen, ExternalLink, HelpCircle } from 'lucide-react';
 
 export default function StudyPlanner({ userId }) {
@@ -17,7 +18,7 @@ export default function StudyPlanner({ userId }) {
     setLoadingRoadmap(true);
     setError('');
     try {
-      const response = await fetch('http://localhost:8080/studyPlan', {
+      const response = await fetch(`${API_BASE_URL}/studyPlan`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,7 +43,7 @@ export default function StudyPlanner({ userId }) {
   const fetchLeetcodeProblems = async () => {
     setLoadingLeetcode(true);
     try {
-      const response = await fetch('http://localhost:8080/progress/leetcode', {
+      const response = await fetch(`${API_BASE_URL}/progress/leetcode`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -63,7 +64,7 @@ export default function StudyPlanner({ userId }) {
   // Fetch current user progress metrics (for completed problems list)
   const fetchProgressStats = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/progress`, {
+      const response = await fetch(`${API_BASE_URL}/progress`, {
         headers: { 'X-User-Id': userId }
       });
       if (response.ok) {
@@ -83,7 +84,7 @@ export default function StudyPlanner({ userId }) {
 
   const toggleDayCompletion = async (dayIdx) => {
     try {
-      const response = await fetch('http://localhost:8080/studyPlan/complete', {
+      const response = await fetch(`${API_BASE_URL}/studyPlan/complete`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +103,7 @@ export default function StudyPlanner({ userId }) {
 
   const toggleProblemCompletion = async (problemName) => {
     try {
-      const response = await fetch('http://localhost:8080/progress/leetcode/toggle', {
+      const response = await fetch(`${API_BASE_URL}/progress/leetcode/toggle`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

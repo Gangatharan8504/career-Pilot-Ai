@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { API_BASE_URL } from '../config';
 import { Send, Sparkles, RefreshCw, Star, User, ShieldAlert } from 'lucide-react';
 
 export default function MockInterview({ userId }) {
@@ -11,7 +12,7 @@ export default function MockInterview({ userId }) {
   // Load existing interview history on mount
   const loadHistory = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/history?sessionType=INTERVIEW`, {
+      const response = await fetch(`${API_BASE_URL}/history?sessionType=INTERVIEW`, {
         headers: { 'X-User-Id': userId }
       });
       if (response.ok) {
@@ -48,7 +49,7 @@ export default function MockInterview({ userId }) {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8080/interview', {
+      const response = await fetch(`${API_BASE_URL}/interview`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +82,7 @@ export default function MockInterview({ userId }) {
     setMessages([]);
 
     try {
-      const response = await fetch('http://localhost:8080/interview', {
+      const response = await fetch(`${API_BASE_URL}/interview`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

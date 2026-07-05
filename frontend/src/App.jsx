@@ -10,6 +10,7 @@ import StudyPlanner from './pages/StudyPlanner';
 import AdminDashboard from './pages/AdminDashboard';
 import AptitudeRound from './pages/AptitudeRound';
 import ProfileSettings from './pages/ProfileSettings';
+import { API_BASE_URL } from './config';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -214,7 +215,7 @@ export default function App() {
           }}>
             {user.profilePic ? (
               <img 
-                src={`http://localhost:8080${user.profilePic}`} 
+                src={`${API_BASE_URL}${user.profilePic}`} 
                 alt="User Profile" 
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
               />

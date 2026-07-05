@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { API_BASE_URL } from '../config';
 import { Award, FileText, CheckCircle2, Flame, HelpCircle, GraduationCap, ChevronRight, Brain } from 'lucide-react';
 
 const RevealText = ({ text }) => {
@@ -31,7 +32,7 @@ export default function Dashboard({ userId, userName, setTab }) {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/progress`, {
+      const response = await fetch(`${API_BASE_URL}/progress`, {
         headers: { 'X-User-Id': userId }
       });
       if (!response.ok) {

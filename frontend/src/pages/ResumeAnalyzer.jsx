@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 import { UploadCloud, CheckCircle2, AlertTriangle, Search, Briefcase, DollarSign, Award, Star, ListChecks } from 'lucide-react';
 
 export default function ResumeAnalyzer({ userId }) {
@@ -12,7 +13,7 @@ export default function ResumeAnalyzer({ userId }) {
   useEffect(() => {
     const fetchExistingAnalysis = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/uploadResume`, {
+        const response = await fetch(`${API_BASE_URL}/uploadResume`, {
           headers: { 'X-User-Id': userId }
         });
         if (response.ok) {
@@ -51,7 +52,7 @@ export default function ResumeAnalyzer({ userId }) {
 
     try {
       setUploadProgress(50);
-      const response = await fetch('http://localhost:8080/uploadResume', {
+      const response = await fetch(`${API_BASE_URL}/uploadResume`, {
         method: 'POST',
         headers: {
           'X-User-Id': userId
