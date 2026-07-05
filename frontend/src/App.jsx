@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, FileText, MessageSquare, ShieldAlert, Award, Calendar, LogOut, GraduationCap, Menu, Brain } from 'lucide-react';
+import { LayoutDashboard, FileText, MessageSquare, ShieldAlert, Award, Calendar, LogOut, GraduationCap, Menu, Brain, User } from 'lucide-react';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -9,6 +9,7 @@ import MockInterview from './pages/MockInterview';
 import StudyPlanner from './pages/StudyPlanner';
 import AdminDashboard from './pages/AdminDashboard';
 import AptitudeRound from './pages/AptitudeRound';
+import ProfileSettings from './pages/ProfileSettings';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -174,6 +175,16 @@ export default function App() {
                 <span className="nav-link-text">Study Planner</span>
               </a>
             </li>
+            <li>
+              <a
+                href="#profile"
+                onClick={() => handleTabSelect('profile')}
+                className={`nav-link ${currentTab === 'profile' ? 'active' : ''}`}
+              >
+                <User style={{ flexShrink: 0 }} /> 
+                <span className="nav-link-text">Profile Settings</span>
+              </a>
+            </li>
           </ul>
         </nav>
 
@@ -182,16 +193,47 @@ export default function App() {
           borderTop: '1px solid var(--border-light)',
           paddingTop: '1.25rem',
           display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem',
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: '0.75rem',
           textAlign: 'left'
         }}>
-          <div className="user-profile-details">
-            <div style={{ fontWeight: 600, color: 'white', fontSize: '0.95rem' }}>{user.name}</div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+          <div style={{
+            width: '38px',
+            height: '38px',
+            borderRadius: '50%',
+            overflow: 'hidden',
+            background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            fontWeight: 700,
+            fontSize: '0.85rem',
+            flexShrink: 0
+          }}>
+            {user.profilePic ? (
+              <img 
+                src={`http://localhost:8080${user.profilePic}`} 
+                alt="User Profile" 
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+              />
+            ) : (
+              user.name ? (user.name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase()) : 'CP'
+            )}
+          </div>
+          
+          <div className="user-profile-details" style={{ flexGrow: 1, minWidth: 0 }}>
+            <div style={{ fontWeight: 600, color: 'white', fontSize: '0.9rem', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+              {user.name}
+            </div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
               {user.email}
             </div>
           </div>
+        </div>
+        
+        <div style={{ marginTop: '0.75rem' }}>
           <button
             onClick={handleLogout}
             className="btn btn-secondary user-logout-btn"
@@ -230,7 +272,8 @@ export default function App() {
                currentTab === 'resume' ? 'Resume ATS Analyzer' :
                currentTab === 'chat' ? 'Mentor AI Chat' :
                currentTab === 'interview' ? 'Mock Interview Simulator' :
-               currentTab === 'aptitude' ? 'Aptitude Round Practice' : 'Roadmap Study Planner'}
+               currentTab === 'aptitude' ? 'Aptitude Round Practice' : 
+               currentTab === 'profile' ? 'Profile Settings' : 'Roadmap Study Planner'}
             </h2>
           </div>
 
@@ -248,6 +291,19 @@ export default function App() {
           {currentTab === 'interview' && <MockInterview userId={user.userId} />}
           {currentTab === 'aptitude' && <AptitudeRound userId={user.userId} />}
           {currentTab === 'study' && <StudyPlanner userId={user.userId} />}
+          {currentTab === 'profile' && (
+            <ProfileSettings 
+              userId={user.userId} 
+              userName={user.name} 
+              userEmail={user.email} 
+              userProfilePic={user.profilePic} 
+              onProfileUpdate={(updatedUser) => {
+                const newUserData = { ...user, ...updatedUser };
+                setUser(newUserData);
+                localStorage.setItem('user', JSON.stringify(newUserData));
+              }} 
+            />
+          )}
         </main>
       </div>
     </div>

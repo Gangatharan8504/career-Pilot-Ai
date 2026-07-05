@@ -12,6 +12,7 @@ import { createStudyPlan, getStudyPlan, completeDay } from './controllers/studyP
 import { getProgress, recommendLeetCode, toggleProblem } from './controllers/progressController.js';
 import { getAllStudents } from './controllers/adminController.js';
 import { getQuiz, submitQuizScore } from './controllers/aptitudeController.js';
+import { updateProfile, uploadProfilePic } from './controllers/profileController.js';
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ const PORT = process.env.PORT || 8080;
 
 // Middleware
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 
 // CORS configuration (solves origin constraints when credentials are sent)
 const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
@@ -86,6 +88,10 @@ app.get('/admin/users', getAllStudents);
 // Aptitude Round Quiz Generator
 app.post('/aptitude/generate', getQuiz);
 app.post('/aptitude/submit', submitQuizScore);
+
+// Profile Settings
+app.post('/profile/update', updateProfile);
+app.post('/profile/upload-pic', upload.single('file'), uploadProfilePic);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
