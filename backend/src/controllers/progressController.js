@@ -62,15 +62,12 @@ export async function recommendLeetCode(req, res) {
       skills = ['Java', 'HashMap', 'Array', 'Sliding Window', 'Binary Search'];
     }
 
-    // Call Gemini
-    const rawResult = await generateLeetCodeProblems(skills);
-
     let problemsNode = [];
     try {
+      const rawResult = await generateLeetCodeProblems(skills);
       problemsNode = JSON.parse(rawResult);
     } catch (e) {
-      console.error('Failed to parse LeetCode problems JSON from Gemini: ', e);
-      // Fallback problem set
+      console.error('Failed to get or parse LeetCode problems from Gemini (using local fallback):', e.message);
       problemsNode = [
         { name: 'Two Sum', difficulty: 'Easy', category: 'Array', link: 'https://leetcode.com/problems/two-sum/', importance: 'Fundamental array hashing problem.' },
         { name: 'Longest Substring Without Repeating Characters', difficulty: 'Medium', category: 'Sliding Window', link: 'https://leetcode.com/problems/longest-substring-without-repeating-characters/', importance: 'Standard sliding window algorithm check.' },

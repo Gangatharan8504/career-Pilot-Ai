@@ -53,14 +53,13 @@ export async function createStudyPlan(req, res) {
     // Generate via Gemini
     const dailyHours = 3;
     const days = 30;
-    const rawPlan = await generateStudyPlan(skills, weakAreas, dailyHours, days);
-
     let roadmap = [];
     try {
+      const rawPlan = await generateStudyPlan(skills, weakAreas, dailyHours, days);
       const parsed = JSON.parse(rawPlan);
       roadmap = parsed.roadmap || [];
     } catch (e) {
-      console.error('Failed to parse Gemini generated study plan: ', e);
+      console.error('Failed to get or parse Gemini generated study plan (using local fallback): ', e.message);
       // Fallback day list
       for (let i = 1; i <= days; i++) {
         roadmap.push(`Day ${i}: Study core concepts of ${skills[i % skills.length]} and practice ${weakAreas[i % weakAreas.length]}`);

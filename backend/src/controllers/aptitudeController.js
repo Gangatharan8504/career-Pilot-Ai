@@ -10,14 +10,14 @@ export async function getQuiz(req, res) {
   }
 
   try {
-    const rawResult = await generateAptitudeQuiz(category);
     let quiz = [];
     try {
+      const rawResult = await generateAptitudeQuiz(category);
       quiz = JSON.parse(rawResult);
     } catch (e) {
-      console.error('Failed to parse Gemini generated aptitude quiz: ', e);
+      console.error('Failed to get or parse Gemini generated aptitude quiz (using local fallback): ', e.message);
       
-      // Resilient Fallbacks if JSON parsing fails
+      // Resilient Fallbacks if JSON parsing or Gemini API fails
       if (category === 'aptitude') {
         quiz = [
           { id: 1, question: "A train running at the speed of 60 km/hr crosses a pole in 9 seconds. What is the length of the train?", options: { A: "120 metres", B: "180 metres", C: "324 metres", D: "150 metres" }, correctAnswer: "D", explanation: "Speed = 60 * (5/18) m/s = 50/3 m/s. Length = Speed * Time = (50/3) * 9 = 150 metres." },

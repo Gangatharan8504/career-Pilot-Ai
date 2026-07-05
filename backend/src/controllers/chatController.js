@@ -29,7 +29,13 @@ export async function chat(req, res) {
     const context = lastMessages.map(msg => `${msg.sender}: ${msg.text}`).join('\n');
 
     // Call Gemini
-    const aiResponse = await answerChat(context, message);
+    let aiResponse;
+    try {
+      aiResponse = await answerChat(context, message);
+    } catch (e) {
+      console.error('Failed to get answer from Gemini (using offline mock response):', e.message);
+      aiResponse = "I'm sorry, I'm currently running in offline mock mode due to API rate limits. I can help explain basic Java concepts like HashMaps, ArrayLists, and object-oriented programming. What topic would you like to discuss locally?";
+    }
 
     // Save to DB
     session.messages.push({ sender: 'USER', text: message });
@@ -74,7 +80,17 @@ export async function interview(req, res) {
     const context = session.messages.map(msg => `${msg.sender}: ${msg.text}`).join('\n');
 
     // Call Gemini Interviewer
-    const aiResponse = await conductMockInterview(context, message);
+    let aiResponse;
+    try {
+      aiResponse = await conductMockInterview(context, message);
+    } catch (e) {
+      console.error('Failed to get mock interview response from Gemini (using offline mock response):', e.message);
+      if (message === 'start') {
+        aiResponse = "Welcome to your offline mock interview panel. Let's start with a basic question: Explain the difference between an Abstract Class and an Interface in Java.";
+      } else {
+        aiResponse = "Great explanation! (Offline feedback). Now, tell me about the lifecycle of a Thread in Java. What states can a Thread be in?";
+      }
+    }
 
     // Try to extract a score out of 10 from the response
     const ratingPattern = /(?:score|evaluation|points|rating|mark)[\s:]*(\d+)(?:\s*\/\s*10)?/i;
