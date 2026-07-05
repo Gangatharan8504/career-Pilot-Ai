@@ -109,7 +109,16 @@ Provide your response as a valid JSON object matching the following structure ex
   "certifications": ["Cert A", "Cert B"],
   "expectedSalary": "$80,000 - $100,000 / Rs. 8-12 LPA",
   "topCompanies": ["Google", "Microsoft", "TCS"],
-  "feedback": "Constructive feedback for the candidate regarding resume strength and layout."
+  "feedback": "Constructive feedback for the candidate regarding resume strength and layout.",
+  "jobRecommendations": [
+    {
+      "title": "Software Engineer",
+      "matchPercentage": 90,
+      "reason": "Detailed rationale explaining why they match this role based on their skills.",
+      "keySkillsMatched": ["Java", "Spring Boot"],
+      "suggestedCompanies": ["TCS", "Accenture", "Infosys"]
+    }
+  ]
 }`;
   return generateText(prompt, true);
 }

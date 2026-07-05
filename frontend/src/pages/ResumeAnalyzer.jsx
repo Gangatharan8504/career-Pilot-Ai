@@ -329,6 +329,94 @@ export default function ResumeAnalyzer({ userId }) {
             </div>
           </div>
 
+          {/* Job Recommendations Section */}
+          {analysis.jobRecommendations && analysis.jobRecommendations.length > 0 && (
+            <div className="glass-panel" style={{ padding: '2rem', textAlign: 'left', marginTop: '1.5rem' }}>
+              <h3 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--secondary)' }}>
+                <Briefcase size={20} /> Suggested Job Recommendations
+              </h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                Based on your experience, current project builds, and technical profile, we recommend preparing for these target roles:
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                {analysis.jobRecommendations.map((job, idx) => (
+                  <div key={idx} style={{
+                    padding: '1.5rem',
+                    background: 'rgba(255, 255, 255, 0.02)',
+                    border: '1px solid var(--border-light)',
+                    borderRadius: '12px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.75rem'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+                      <h4 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'white', margin: 0 }}>
+                        {job.title}
+                      </h4>
+                      <span style={{
+                        padding: '0.25rem 0.75rem',
+                        background: 'rgba(6, 182, 212, 0.15)',
+                        border: '1px solid var(--secondary)',
+                        borderRadius: '20px',
+                        fontSize: '0.85rem',
+                        color: 'var(--secondary)',
+                        fontWeight: 600
+                      }}>
+                        {job.matchPercentage}% Profile Match
+                      </span>
+                    </div>
+
+                    <p style={{ color: '#cbd5e1', fontSize: '0.925rem', lineHeight: '1.5', margin: 0 }}>
+                      {job.reason}
+                    </p>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.25rem' }}>
+                      {/* Key Matched Skills */}
+                      {job.keySkillsMatched && job.keySkillsMatched.length > 0 && (
+                        <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+                          <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>Matched Skills:</span>
+                          {job.keySkillsMatched.map((skill, sIdx) => (
+                            <span key={sIdx} style={{
+                              padding: '0.15rem 0.5rem',
+                              background: 'rgba(16, 185, 129, 0.1)',
+                              border: '1px solid rgba(16, 185, 129, 0.2)',
+                              borderRadius: '4px',
+                              fontSize: '0.75rem',
+                              color: 'var(--accent-green)',
+                              fontWeight: 500
+                            }}>
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Suggested Companies */}
+                      {job.suggestedCompanies && job.suggestedCompanies.length > 0 && (
+                        <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+                          <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>Target Companies:</span>
+                          {job.suggestedCompanies.map((company, cIdx) => (
+                            <span key={cIdx} style={{
+                              padding: '0.15rem 0.5rem',
+                              background: 'rgba(139, 92, 246, 0.1)',
+                              border: '1px solid rgba(139, 92, 246, 0.2)',
+                              borderRadius: '4px',
+                              fontSize: '0.75rem',
+                              color: 'var(--primary)',
+                              fontWeight: 500
+                            }}>
+                              {company}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
         </div>
       )}
     </div>
