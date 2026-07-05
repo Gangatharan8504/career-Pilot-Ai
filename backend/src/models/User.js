@@ -30,6 +30,12 @@ const UserSchema = new mongoose.Schema({
     type: String,
     enum: ['student', 'admin'],
     default: 'student'
+  },
+  resetOtp: {
+    type: String
+  },
+  resetOtpExpires: {
+    type: Date
   }
 }, {
   timestamps: true

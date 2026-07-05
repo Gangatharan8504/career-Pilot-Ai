@@ -251,4 +251,50 @@ export async function sendPerformanceReportEmail(email, name, report) {
   }
 }
 
-export default { sendOtpEmail, sendWelcomeEmail, sendPerformanceReportEmail };
+export async function sendResetPasswordEmail(email, name, otp) {
+  try {
+    const mailTransporter = await getTransporter();
+    const mailOptions = {
+      from: process.env.SMTP_FROM || 'no-reply@careerpilot.ai',
+      to: email,
+      subject: 'CareerPilot AI - Reset Your Password',
+      html: `
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 25px; color: #1e293b; max-width: 500px; margin: auto; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff;">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h1 style="color: #8b5cf6; font-size: 24px; margin: 0;">CareerPilot AI Mentor</h1>
+            <p style="color: #64748b; font-size: 14px; margin-top: 5px;">AI-Powered Placement Assistant</p>
+          </div>
+          <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 20px;"/>
+          <p style="font-size: 16px; line-height: 1.5;">Hello <strong>${name}</strong>,</p>
+          <p style="font-size: 16px; line-height: 1.5; color: #475569;">We received a request to reset your password. Use the verification OTP code below to set up your new credentials:</p>
+          
+          <div style="background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px; padding: 15px 0; text-align: center; margin: 25px 0;">
+            <span style="font-size: 32px; font-weight: 800; letter-spacing: 6px; color: #8b5cf6;">${otp}</span>
+          </div>
+          
+          <p style="font-size: 13px; color: #94a3b8; text-align: center; margin-top: 30px;">
+            This OTP is valid for 15 minutes. If you did not request a password reset, please ignore this email.
+          </p>
+        </div>
+      `
+    };
+
+    const info = await mailTransporter.sendMail(mailOptions);
+    if (mailTransporter.isTest) {
+      const previewUrl = nodemailer.getTestMessageUrl ? nodemailer.getTestMessageUrl(info) : null;
+      console.log("\n------------------------------------------------------------");
+      console.log(`[Ethereal Mail Sandbox] Password Reset Email sent to: ${email}`);
+      console.log(`Reset OTP: ${otp}`);
+      if (previewUrl) {
+        console.log(`Open reset message preview at: ${previewUrl}`);
+      }
+      console.log("------------------------------------------------------------\n");
+    }
+    return info;
+  } catch (err) {
+    console.error("Failed to send reset password email: ", err);
+    throw err;
+  }
+}
+
+export default { sendOtpEmail, sendWelcomeEmail, sendPerformanceReportEmail, sendResetPasswordEmail };

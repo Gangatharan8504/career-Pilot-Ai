@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 import Progress from '../models/Progress.js';
-import { sendOtpEmail, sendWelcomeEmail } from '../services/mailService.js';
+import { sendOtpEmail, sendWelcomeEmail, sendResetPasswordEmail } from '../services/mailService.js';
 
 export async function register(req, res) {
   const { name, email, password } = req.body;
@@ -179,5 +179,98 @@ export async function login(req, res) {
   } catch (err) {
     console.error('Login error:', err);
     return res.status(500).json({ error: 'Server error during login.' });
+  }
+}
+
+export async function forgotPassword(req, res) {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ error: 'Email is required.' });
+  }
+
+  try {
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) {
+      return res.status(404).json({ error: 'Email is not registered.' });
+    }
+
+    // Generate 6-digit OTP
+    const resetOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    const resetOtpExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 mins validity
+
+    user.resetOtp = resetOtp;
+    user.resetOtpExpires = resetOtpExpires;
+    await user.save();
+
+    // Send reset email
+    let emailSent = true;
+    let emailError = null;
+    try {
+      await sendResetPasswordEmail(user.email, user.name, resetOtp);
+    } catch (mailErr) {
+      emailSent = false;
+      emailError = mailErr.message;
+      console.error('\n============================================================');
+      console.error(`[SMTP ERROR] Failed to send reset email to ${email}:`, mailErr.message);
+      console.error(`[RESET FALLBACK] Reset code for ${user.name} is: ${resetOtp}`);
+      console.error('============================================================\n');
+    }
+
+    return res.status(200).json({
+      message: emailSent
+        ? 'Password reset OTP sent to your email.'
+        : 'Password reset code generated. Verification code logged in backend console.',
+      email: user.email,
+      emailSent,
+      emailError
+    });
+
+  } catch (err) {
+    console.error('Forgot password error:', err);
+    return res.status(500).json({ error: 'Server error during forgot password processing.' });
+  }
+}
+
+export async function resetPassword(req, res) {
+  const { email, otp, newPassword } = req.body;
+  if (!email || !otp || !newPassword) {
+    return res.status(400).json({ error: 'Email, OTP, and new password are required.' });
+  }
+
+  if (newPassword.length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters long.' });
+  }
+
+  try {
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) {
+      return res.status(404).json({ error: 'Email is not registered.' });
+    }
+
+    // Check reset OTP match and expiry
+    if (user.resetOtp !== otp) {
+      return res.status(400).json({ error: 'Invalid password reset OTP.' });
+    }
+
+    if (new Date() > user.resetOtpExpires) {
+      return res.status(400).json({ error: 'Password reset OTP has expired.' });
+    }
+
+    // Hash new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    user.password = hashedPassword;
+    user.resetOtp = undefined;
+    user.resetOtpExpires = undefined;
+    await user.save();
+
+    return res.status(200).json({
+      message: 'Password reset successful! You can now log in.'
+    });
+
+  } catch (err) {
+    console.error('Reset password error:', err);
+    return res.status(500).json({ error: 'Server error during password reset.' });
   }
 }

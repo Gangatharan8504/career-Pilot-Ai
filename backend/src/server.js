@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 
 // Controllers
-import { register, verifyOtp, login } from './controllers/authController.js';
+import { register, verifyOtp, login, forgotPassword, resetPassword } from './controllers/authController.js';
 import { uploadResume, getResumeAnalysis } from './controllers/resumeController.js';
 import { chat, interview, getHistory } from './controllers/chatController.js';
 import { createStudyPlan, getStudyPlan, completeDay } from './controllers/studyPlanController.js';
@@ -58,6 +58,8 @@ mongoose.connect(mongoUri)
 app.post('/register', register);
 app.post('/verify-otp', verifyOtp);
 app.post('/login', login);
+app.post('/forgot-password', forgotPassword);
+app.post('/reset-password', resetPassword);
 
 // Resume Analyzer
 app.post('/uploadResume', upload.single('file'), uploadResume);
