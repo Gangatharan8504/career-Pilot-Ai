@@ -83,7 +83,7 @@ export async function register(req, res) {
     });
   } catch (err) {
     console.error('Registration error:', err);
-    return res.status(500).json({ error: 'Server error during registration.' });
+    return res.status(500).json({ error: 'Server error during registration.', details: err.message });
   }
 }
 
@@ -139,7 +139,7 @@ export async function verifyOtp(req, res) {
     });
   } catch (err) {
     console.error('OTP Verification error:', err);
-    return res.status(500).json({ error: 'Server error during OTP verification.' });
+    return res.status(500).json({ error: 'Server error during OTP verification.', details: err.message });
   }
 }
 
@@ -179,7 +179,7 @@ export async function login(req, res) {
     });
   } catch (err) {
     console.error('Login error:', err);
-    return res.status(500).json({ error: 'Server error during login.' });
+    return res.status(500).json({ error: 'Server error during login.', details: err.message });
   }
 }
 
@@ -228,7 +228,7 @@ export async function forgotPassword(req, res) {
 
   } catch (err) {
     console.error('Forgot password error:', err);
-    return res.status(500).json({ error: 'Server error during forgot password processing.' });
+    return res.status(500).json({ error: 'Server error during forgot password processing.', details: err.message });
   }
 }
 
@@ -272,6 +272,6 @@ export async function resetPassword(req, res) {
 
   } catch (err) {
     console.error('Reset password error:', err);
-    return res.status(500).json({ error: 'Server error during password reset.' });
+    return res.status(500).json({ error: 'Server error during password reset.', details: err.message });
   }
 }
