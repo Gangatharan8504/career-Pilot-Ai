@@ -436,7 +436,7 @@ export default function Login({ onLoginSuccess, switchToRegister }) {
               </button>
             </form>
 
-            <p style={{ marginTop: '2rem', color: '#94a3b8', fontSize: '0.9rem' }}>
+            <p style={{ marginTop: '2rem', color: '#94a3b8', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
               Don't have an account?{' '}
               <span
                 onClick={switchToRegister}
@@ -450,6 +450,28 @@ export default function Login({ onLoginSuccess, switchToRegister }) {
                 Create account
               </span>
             </p>
+
+            {/* Subtle API server URL indicator */}
+            <div style={{
+              padding: '0.5rem 0.75rem',
+              background: 'rgba(255, 255, 255, 0.02)',
+              border: '1px solid var(--border-light)',
+              borderRadius: '8px',
+              fontSize: '0.75rem',
+              color: 'var(--text-muted)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem'
+            }}>
+              <span style={{
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                background: API_BASE_URL.includes('localhost') ? 'var(--accent-orange)' : 'var(--accent-green)',
+                boxShadow: API_BASE_URL.includes('localhost') ? '0 0 8px var(--accent-orange)' : '0 0 8px var(--accent-green)'
+              }}></span>
+              API Server: <code style={{ color: 'white' }}>{API_BASE_URL}</code>
+            </div>
           </div>
         )}
       </div>
