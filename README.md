@@ -189,6 +189,26 @@ npm run dev
 ```
 Open `http://localhost:5173` in your browser.
 
+#### Production Cloud Deployment
+
+For production deployments, host the client on Vercel and the Express API on Render/Railway.
+
+##### 1. Backend Deployment (Render / Railway)
+- Link your GitHub repository and set the **Root Directory** to `backend`.
+- Configure the environment variables in your dashboard:
+  - `MONGO_URI` = `mongodb+srv://...` (Your MongoDB Atlas connection URI whitelisted for `0.0.0.0/0`)
+  - `GEMINI_API_KEY` = `AIzaSy...` (Your Google Gemini API Key)
+  - `GEMINI_MODEL` = `models/gemini-2.5-flash`
+  - `PORT` = `8080`
+
+##### 2. Frontend Deployment (Vercel)
+- Link your GitHub repository and set the **Root Directory** to `frontend`.
+- Vercel automatically detects the **Vite** configuration.
+- Set the environment variable:
+  - `VITE_API_URL` = `https://your-backend-name.onrender.com` (Your Render backend service URL)
+
+Our built-in path trimmers and Vercel routing rules (`vercel.json`) automatically normalize sub-routing redirects and prevent CORS blocks, ensuring zero connection issues.
+
 ---
 
 ## 10. Future Enhancements
