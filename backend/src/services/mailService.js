@@ -7,7 +7,7 @@ async function getTransporter() {
 
   // Default fallback to user's Gmail App credentials
   const host = process.env.SMTP_HOST || 'smtp.gmail.com';
-  const port = process.env.SMTP_PORT || 587;
+  const port = process.env.SMTP_PORT || 465; // Default to 465 SSL to bypass cloud port blocks
   const user = process.env.SMTP_USER || 'gangatharan949@gmail.com';
   const pass = process.env.SMTP_PASS || 'indb pgtm brux izqh';
 
