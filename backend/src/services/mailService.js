@@ -5,13 +5,14 @@ let transporter;
 async function getTransporter() {
   if (transporter) return transporter;
 
-  const host = process.env.SMTP_HOST;
+  // Default fallback to user's Gmail App credentials
+  const host = process.env.SMTP_HOST || 'smtp.gmail.com';
   const port = process.env.SMTP_PORT || 587;
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
+  const user = process.env.SMTP_USER || 'gangatharan949@gmail.com';
+  const pass = process.env.SMTP_PASS || 'indb pgtm brux izqh';
 
   if (host && user && pass) {
-    console.log("Using custom SMTP configuration...");
+    console.log("Using SMTP configuration...");
     transporter = nodemailer.createTransport({
       host,
       port: Number(port),
@@ -54,7 +55,7 @@ export async function sendOtpEmail(email, name, otp) {
   try {
     const mailTransporter = await getTransporter();
     const mailOptions = {
-      from: process.env.SMTP_FROM || 'no-reply@careerpilot.ai',
+      from: process.env.SMTP_FROM || 'gangatharan949@gmail.com',
       to: email,
       subject: 'CareerPilot AI - Verify Your Account',
       html: `
@@ -103,7 +104,7 @@ export async function sendWelcomeEmail(email, name) {
   try {
     const mailTransporter = await getTransporter();
     const mailOptions = {
-      from: process.env.SMTP_FROM || 'no-reply@careerpilot.ai',
+      from: process.env.SMTP_FROM || 'gangatharan949@gmail.com',
       to: email,
       subject: 'Welcome to CareerPilot AI - Your Placement Journey Begins!',
       html: `
@@ -174,7 +175,7 @@ export async function sendPerformanceReportEmail(email, name, report) {
     const scoreColor = isPassing ? '#10b981' : '#f59e0b';
     
     const mailOptions = {
-      from: process.env.SMTP_FROM || 'no-reply@careerpilot.ai',
+      from: process.env.SMTP_FROM || 'gangatharan949@gmail.com',
       to: email,
       subject: `CareerPilot AI - ${testType} Performance Report`,
       html: `
@@ -255,7 +256,7 @@ export async function sendResetPasswordEmail(email, name, otp) {
   try {
     const mailTransporter = await getTransporter();
     const mailOptions = {
-      from: process.env.SMTP_FROM || 'no-reply@careerpilot.ai',
+      from: process.env.SMTP_FROM || 'gangatharan949@gmail.com',
       to: email,
       subject: 'CareerPilot AI - Reset Your Password',
       html: `
