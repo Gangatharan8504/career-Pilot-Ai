@@ -9,7 +9,7 @@ async function getTransporter() {
   const host = process.env.SMTP_HOST || 'smtp.gmail.com';
   const port = process.env.SMTP_PORT || 465; // Default to 465 SSL to bypass cloud port blocks
   const user = process.env.SMTP_USER || 'gangatharan949@gmail.com';
-  const pass = process.env.SMTP_PASS || 'indb pgtm brux izqh';
+  const pass = process.env.SMTP_PASS || 'xehj zckt izvb wpzu';
 
   if (host && user && pass) {
     console.log("Using SMTP configuration...");
