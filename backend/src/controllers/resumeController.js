@@ -113,7 +113,7 @@ export async function uploadResume(req, res) {
 
   } catch (err) {
     console.error('Upload resume error:', err);
-    return res.status(500).json({ error: 'Server error during resume processing.' });
+    return res.status(500).json({ error: 'Server error during resume processing.', details: err.message });
   }
 }
 
@@ -139,6 +139,6 @@ export async function getResumeAnalysis(req, res) {
     });
   } catch (err) {
     console.error('Get resume analysis error:', err);
-    return res.status(500).json({ error: 'Server error retrieving resume analysis.' });
+    return res.status(500).json({ error: 'Server error retrieving resume analysis.', details: err.message });
   }
 }

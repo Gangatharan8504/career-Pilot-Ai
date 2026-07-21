@@ -63,7 +63,8 @@ export default function ResumeAnalyzer({ userId }) {
       setUploadProgress(80);
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to analyze resume.');
+        const errMsg = data.details ? `${data.error} (${data.details})` : (data.error || 'Failed to analyze resume.');
+        throw new Error(errMsg);
       }
 
       setUploadProgress(100);
