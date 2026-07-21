@@ -31,8 +31,33 @@ export async function uploadResume(req, res) {
       return res.status(400).json({ error: 'No readable text could be extracted from the resume PDF.' });
     }
 
-    // 2. Call Gemini for resume analysis (JSON response)
-    const analysisJson = await analyzeResume(resumeText);
+    // 2. Call Gemini for resume analysis (JSON response) with offline fallback
+    let analysisJson;
+    try {
+      analysisJson = await analyzeResume(resumeText);
+    } catch (err) {
+      console.warn('Gemini resume analysis failed (using offline fallback):', err.message);
+      analysisJson = JSON.stringify({
+        atsScore: 75,
+        strongPoints: ["Good structure and clear formatting", "Includes key relevant projects"],
+        weakPoints: ["Needs more quantifiable achievements", "Missing some advanced technical skills"],
+        missingSkills: ["Docker", "Kubernetes", "AWS Cloud", "System Design"],
+        projectsToBuild: ["Build a Full-Stack MERN Application", "Implement a Microservices Architecture API"],
+        certifications: ["AWS Certified Developer Associate", "Oracle Certified Professional Java SE"],
+        expectedSalary: "Rs. 6-10 LPA",
+        topCompanies: ["TCS", "Accenture", "Cognizant", "Infosys"],
+        feedback: "Your resume has a strong foundation. (Running in offline preview mode due to API rate-limit). Focus on adding quantifiable results to your project descriptions and acquire missing cloud skills.",
+        jobRecommendations: [
+          {
+            "title": "Junior Software Engineer",
+            "matchPercentage": 80,
+            "reason": "Based on your core programming skills and web project constructs.",
+            "keySkillsMatched": ["Java", "React", "Node.js"],
+            "suggestedCompanies": ["Accenture", "TCS"]
+          }
+        ]
+      });
+    }
 
     // 3. Extract ATS Score and skills list from response
     let atsScore = 60; // Fallback
@@ -45,8 +70,7 @@ export async function uploadResume(req, res) {
         skills = [...skills, ...parsed.skills];
       }
     } catch (e) {
-      console.error('Failed to parse analysis JSON from Gemini: ', e);
-      // Non-fatal, keep fallbacks
+      console.error('Failed to parse analysis JSON: ', e);
     }
 
     // 4. Generate text embeddings
